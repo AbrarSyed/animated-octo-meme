@@ -1,8 +1,16 @@
+# gradle
 .gradle
-build/
+build
 
-# Ignore Gradle GUI config
-gradle-app.setting
+# eclipse
+bin
+.project
+.classpath
+.metadata
 
-# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+#idea
+*.ipr
+*.iml
+*.iws
+.idea
+out

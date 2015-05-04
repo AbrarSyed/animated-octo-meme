@@ -7,6 +7,7 @@ bin
 .project
 .classpath
 .metadata
+.settings
 
 #idea
 *.ipr
@@ -14,3 +15,6 @@ bin
 *.iws
 .idea
 out
+
+# other
+test

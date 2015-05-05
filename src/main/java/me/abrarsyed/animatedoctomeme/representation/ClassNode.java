@@ -24,7 +24,6 @@ public class ClassNode extends ClassVisitor
     public int                  access;
     public List<ClassType>      interfaces;
     public List<AnnotationNode> annotations;
-    public List<AnnotationNode> typeAnnotations;
 
     public ClassNode()
     {
@@ -64,6 +63,7 @@ public class ClassNode extends ClassVisitor
     @Override
     public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean runtimeVisible)
     {
+        // TODO: these are more complicated than I expected
         return super.visitTypeAnnotation(typeRef, typePath, desc, runtimeVisible);
     }
 

@@ -11,4 +11,8 @@ public abstract class Type
         this.name = name;
         this.isPrimitive = isPrimitive;
     }
+
+    abstract ArrayType asArray(int dimensions);
+
+    abstract boolean isArray();
 }

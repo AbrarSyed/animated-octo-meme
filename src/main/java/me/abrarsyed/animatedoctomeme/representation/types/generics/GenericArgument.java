@@ -5,5 +5,6 @@ import me.abrarsyed.animatedoctomeme.representation.types.ClassType;
 public interface GenericArgument
 {
     public ClassType getType();
+
     public GenericArgumentVariant getVariant();
 }

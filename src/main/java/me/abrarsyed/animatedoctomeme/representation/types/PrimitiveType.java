@@ -6,9 +6,19 @@ public class PrimitiveType extends Type
     {
         super(name, true);
     }
-    
+
     public boolean isVoid()
     {
         return name.equals("V");
+    }
+
+    public ArrayType asArray(int dimensions)
+    {
+        return new PrimitiveArrayType(name, dimensions);
+    }
+
+    public boolean isArray()
+    {
+        return false;
     }
 }

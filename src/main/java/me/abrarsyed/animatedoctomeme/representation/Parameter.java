@@ -6,20 +6,20 @@ import me.abrarsyed.animatedoctomeme.representation.types.ClassType;
 
 import com.google.common.collect.Lists;
 
-public class ClassParameter
+public class Parameter
 {
     public final String          name;
     public final ClassType       superType;
     public final List<ClassType> superInterfaces;
 
-    public ClassParameter(String name, ClassType boundClass)
+    public Parameter(String name, ClassType boundClass)
     {
         this.name = name;
         superType = boundClass;
         superInterfaces = Lists.newArrayList();
     }
 
-    public ClassParameter(String name)
+    public Parameter(String name)
     {
         this.name = name;
         superType = null;

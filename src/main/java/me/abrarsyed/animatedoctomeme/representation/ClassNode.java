@@ -2,7 +2,8 @@ package me.abrarsyed.animatedoctomeme.representation;
 
 import java.util.List;
 
-import me.abrarsyed.animatedoctomeme.representation.types.Type;
+import me.abrarsyed.animatedoctomeme.representation.types.ClassType;
+import me.abrarsyed.animatedoctomeme.util.TypeParser;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
@@ -11,14 +12,19 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.TypePath;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+
 public class ClassNode extends ClassVisitor
 {
     public String               name;
-    public List<ClassParameter> parameters;
-    public Type                 superType;
+    public List<Parameter>      parameters;
+    public ClassType            superType;
     public ClassVariant         type;
     public int                  access;
-    public List<String>         interfaces;
+    public List<ClassType>      interfaces;
+    public List<AnnotationNode> annotations;
+    public List<AnnotationNode> typeAnnotations;
 
     public ClassNode()
     {
@@ -30,22 +36,35 @@ public class ClassNode extends ClassVisitor
     {
         this.name = name;
         this.access = access;
-        
-        // TODO: the rest
+
+        if (Strings.isNullOrEmpty(signature))
+        {
+            if (!superType.equals("java/lang/Object")) // otherwise leave it null
+            {
+                superType = new ClassType(superName);
+            }
+
+            this.interfaces = Lists.newArrayListWithCapacity(interfaces.length);
+            for (String s : interfaces)
+                this.interfaces.add(new ClassType(s));
+        }
+        else
+        {
+            // PARSE SIGNATURE! FOR GENERICS
+        }
     }
 
     @Override
-    public AnnotationVisitor visitAnnotation(String desc, boolean visible)
+    public AnnotationVisitor visitAnnotation(String desc, boolean runtimeVisible)
     {
-        // TODO Auto-generated method stub
-        return super.visitAnnotation(desc, visible);
+        AnnotationNode annot = new AnnotationNode(TypeParser.parseClassType(desc), runtimeVisible);
+        return annot;
     }
 
     @Override
-    public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean visible)
+    public AnnotationVisitor visitTypeAnnotation(int typeRef, TypePath typePath, String desc, boolean runtimeVisible)
     {
-        // TODO Auto-generated method stub
-        return super.visitTypeAnnotation(typeRef, typePath, desc, visible);
+        return super.visitTypeAnnotation(typeRef, typePath, desc, runtimeVisible);
     }
 
     @Override

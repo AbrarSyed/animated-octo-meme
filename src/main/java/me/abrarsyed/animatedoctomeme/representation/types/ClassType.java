@@ -6,4 +6,14 @@ public class ClassType extends Type
     {
         super(name, false);
     }
+
+    public ArrayType asArray(int dimensions)
+    {
+        return new ClassArrayType(name, dimensions);
+    }
+
+    public boolean isArray()
+    {
+        return false;
+    }
 }

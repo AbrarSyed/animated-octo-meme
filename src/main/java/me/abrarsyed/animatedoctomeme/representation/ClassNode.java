@@ -3,6 +3,7 @@ package me.abrarsyed.animatedoctomeme.representation;
 import java.util.List;
 
 import me.abrarsyed.animatedoctomeme.representation.types.ClassType;
+import me.abrarsyed.animatedoctomeme.representation.types.Type;
 import me.abrarsyed.animatedoctomeme.util.TypeParser;
 
 import org.objectweb.asm.AnnotationVisitor;
@@ -23,7 +24,9 @@ public class ClassNode extends ClassVisitor
     public ClassVariant         type;
     public int                  access;
     public List<ClassType>      interfaces;
-    public List<AnnotationNode> annotations;
+
+    public List<AnnotationNode> annotations = Lists.newArrayList();
+    public List<FieldNode>      fields      = Lists.newArrayList();
 
     public ClassNode()
     {
@@ -49,7 +52,7 @@ public class ClassNode extends ClassVisitor
         }
         else
         {
-            // PARSE SIGNATURE! FOR GENERICS
+            // TODO: PARSE SIGNATURE! FOR GENERICS
         }
     }
 
@@ -57,6 +60,7 @@ public class ClassNode extends ClassVisitor
     public AnnotationVisitor visitAnnotation(String desc, boolean runtimeVisible)
     {
         AnnotationNode annot = new AnnotationNode(TypeParser.parseClassType(desc), runtimeVisible);
+        annotations.add(annot);
         return annot;
     }
 
@@ -68,17 +72,18 @@ public class ClassNode extends ClassVisitor
     }
 
     @Override
-    public void visitInnerClass(String name, String outerName, String innerName, int access)
-    {
-        // TODO Auto-generated method stub
-        super.visitInnerClass(name, outerName, innerName, access);
-    }
-
-    @Override
     public FieldVisitor visitField(int access, String name, String desc, String signature, Object value)
     {
-        // TODO Auto-generated method stub
-        return super.visitField(access, name, desc, signature, value);
+        Type type = TypeParser.parseType(desc);
+     
+        if (!Strings.isNullOrEmpty(signature))
+        {
+            // TODO: PARSE SIGNATURE! FOR GENERICS
+        }
+        
+        FieldNode node = new FieldNode(type, name, access);
+        fields.add(node);
+        return node;
     }
 
     @Override
@@ -86,6 +91,14 @@ public class ClassNode extends ClassVisitor
     {
         // TODO Auto-generated method stub
         return super.visitMethod(access, name, desc, signature, exceptions);
+    }
+    
+
+    @Override
+    public void visitInnerClass(String name, String outerName, String innerName, int access)
+    {
+        // TODO Auto-generated method stub
+        super.visitInnerClass(name, outerName, innerName, access);
     }
 
     @Override

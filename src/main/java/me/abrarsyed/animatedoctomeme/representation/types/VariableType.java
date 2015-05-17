@@ -2,13 +2,16 @@ package me.abrarsyed.animatedoctomeme.representation.types;
 
 import me.abrarsyed.animatedoctomeme.representation.types.generics.GenericArgument;
 import me.abrarsyed.animatedoctomeme.representation.types.generics.GenericArgumentVariant;
-import me.abrarsyed.animatedoctomeme.representation.types.generics.GenericClassArgumentType;
+import me.abrarsyed.animatedoctomeme.representation.types.generics.GenericVariableArgumentType;
 
-public class ClassType extends Type
+
+public class VariableType extends ClassType
 {
-    public ClassType(String name)
+    public final boolean isVariable = true;
+    
+    public VariableType(String name)
     {
-        super(name, false);
+        super(name);
     }
 
     public ArrayType asArray(int dimensions)
@@ -23,6 +26,6 @@ public class ClassType extends Type
     
     public GenericArgument asGenericArgument(GenericArgumentVariant variant)
     {
-        return new GenericClassArgumentType(name, variant);
+        return new GenericVariableArgumentType(name, variant);
     }
 }

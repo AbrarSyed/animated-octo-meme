@@ -3,11 +3,11 @@ package me.abrarsyed.animatedoctomeme.representation.types.generics;
 import me.abrarsyed.animatedoctomeme.representation.types.ClassArrayType;
 import me.abrarsyed.animatedoctomeme.representation.types.ClassType;
 
-public class GenricArrayArgumentType extends ClassArrayType implements GenericArgument
+public class GenericVariableArrayArgumentType extends ClassArrayType implements GenericArgument
 {
     public final GenericArgumentVariant variant;
 
-    public GenricArrayArgumentType(String name, int dimensions, GenericArgumentVariant variant)
+    public GenericVariableArrayArgumentType(String name, int dimensions, GenericArgumentVariant variant)
     {
         super(name, dimensions);
         this.variant = variant;

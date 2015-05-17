@@ -1,6 +1,8 @@
 package me.abrarsyed.animatedoctomeme.util;
 
 import me.abrarsyed.animatedoctomeme.representation.types.*;
+import me.abrarsyed.animatedoctomeme.representation.types.generics.GenericArgument;
+import me.abrarsyed.animatedoctomeme.representation.types.generics.GenericArgumentVariant;
 
 public final class TypeParser
 {
@@ -11,18 +13,24 @@ public final class TypeParser
     public static Type parseType(String str)
     {
         StringCursor cursor = new StringCursor(str);
-        
-        if (str.startsWith("L"))
+        return parseType(cursor);
+    }
+    
+    public static Type parseType(StringCursor cursor)
+    {
+        if (cursor.charAt() == 'L' || cursor.charAt() == 'T')
         {
             return parseClassType(cursor);
         }
-        else if (str.startsWith("["))
+        else if (cursor.charAt() == '[')
         {
             return (Type) parseArrayType(cursor);
         }
         else
         {
-            return parsePrimitiveType(str);
+            String primitive = ""+cursor.charAt();
+            cursor.increment();
+            return parsePrimitiveType(primitive);
         }
     }
     
@@ -55,10 +63,66 @@ public final class TypeParser
         }
     }
     
-    private static ClassType parseClassType(StringCursor cursor)
+    /**
+     * WIl increment the cursor to just beyond this type.
+     * @param cur StringCursor pointing at start of type
+     * @return parsed out type
+     */
+    public static ClassType parseClassType(StringCursor cur)
     {
-        // TODO: parse the descriptor
-        return null;
+        if (cur.charAt() == 'T')
+        {
+            return new VariableType(cur.substringTill(';'));
+        }
+        else if (cur.charAt() != 'L')
+            throw new IllegalStateException("Cursor is not pointing to the beginning of a class!");
+        
+        cur.increment(); // skip the L
+        
+        String className = cur.substringTill('<', ';');
+        
+        if (cur.charAt() == ';') // end of the class... nice.
+        {
+            cur.increment();
+            return new ClassType(className);
+        }
+            
+        // parse the generics
+        GenericClassType out = new GenericClassType(className);
+        
+        char type;
+        while ((type = cur.charAt()) != '>') // loop until its done.
+        {
+            if (type == '*')
+            {
+                out.generics.add(GenericArgument.NONE);
+                cur.increment();
+                continue;
+            }
+            
+            GenericArgumentVariant variant;
+            switch (type)
+            {
+                case '+':
+                    variant = GenericArgumentVariant.EXTENDS;
+                    cur.increment(); // we dont want the current char in the class ref
+                    break;
+                case '-':
+                    variant = GenericArgumentVariant.SUPER;
+                    cur.increment(); // we dont want the current char in the class ref
+                    break;
+                default:
+                    variant = GenericArgumentVariant.EXACT;
+                    // we want to include the current char in the class ref
+                    cur.decrement();
+                    break;
+            }
+            
+            out.generics.add(parseClassType(cur).asGenericArgument(variant));
+        }
+        cur.increment(); // after the '>'
+        
+        return out;
     }
 
 //       THIS HERE IS A BUNCH OF CODE i WROTE AND ADAPTED FROM THE JAVAASSIST LIBRARY.
